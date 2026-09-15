@@ -1,4 +1,3 @@
-[README (5).md](https://github.com/user-attachments/files/32258258/README.5.md)
 # Fully Known — Personal Growth Dashboard
 
 A private weekly self-assessment for participants in the Fully Known program.
