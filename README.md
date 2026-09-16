@@ -1,3 +1,4 @@
+[README (7).md](https://github.com/user-attachments/files/32268109/README.7.md)
 # Fully Known — Personal Growth Dashboard
 
 A private weekly self-assessment for participants in the Fully Known program.
@@ -23,9 +24,12 @@ Stack: React + Vite (frontend) · Supabase (accounts + database).
 - Every check-in is **private to the person** — row-level security enforces this
 - Optional leadership view showing **anonymous group totals only**
 
-Facilitator portals, participant→facilitator sharing/consent, certificates,
-and Kids/Teens dashboards are Phase 2. The database already carries a `role`
-column so they can be added without a rebuild.
+**Phase 2 (now included):** admin assigns participants to facilitators;
+participants control sharing (ratings + only the reflections they mark);
+facilitators see assigned, consenting participants with trends and shared
+reflections, and keep private meeting notes; admins manage roles and
+assignments. Certificates, scheduling, a prayer/Scripture library, reminders,
+and Kids/Teens dashboards remain for a later phase.
 
 ---
 
@@ -38,6 +42,10 @@ column so they can be added without a rebuild.
 4. Open **Project Settings → API** and copy two values:
    - **Project URL**
    - **anon public** key
+
+**Upgrading an existing install to Phase 2:** in **SQL Editor**, paste and Run
+`schema_phase2.sql` once. It only adds new things (assignments, notes, sharing
+consent, facilitator functions) and is safe to run on your live database.
 
 ### 2. Put the code on GitHub
 Upload **all the files** into the repository so they land at the top level
@@ -97,5 +105,8 @@ Admin.jsx         leadership (anonymous totals)
 constants.js      the 21 areas, scale, reflection prompts, helpers
 styles.js         brand palette + styles
 supabaseClient.js Supabase connection
+Facilitator.jsx  facilitator portal (participant list, detail, notes)
+Assign.jsx        admin roles + assignments
+schema_phase2.sql Phase 2 migration — run once in Supabase
 package.json, vite.config.js, .env.example
 ```
