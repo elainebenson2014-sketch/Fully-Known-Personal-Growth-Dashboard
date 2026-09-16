@@ -3,7 +3,7 @@ import { C, S } from "./styles.js";
 import { SECTIONS, SCALE, IDENTITY, weekKey, weekLabel, avg, allRatings, bandLabel } from "./constants.js";
 import Trend from "./Trend.jsx";
 
-export default function Home({ entries, onStart }) {
+export default function Home({ entries, onStart, consent, onConsent }) {
   const identity = IDENTITY[new Date().getDay() % IDENTITY.length];
   const current = entries.find((e) => e.week === weekKey());
   const latest = entries[entries.length - 1];
@@ -24,12 +24,8 @@ export default function Home({ entries, onStart }) {
   return (
     <div style={{ padding: "20px 20px 8px" }}>
       <div style={S.hero}>
-        <div style={{ fontSize: 11, color: C.gold, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 12 }}>
-          This week
-        </div>
-        <div style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: 25, lineHeight: 1.25, color: C.cream, marginBottom: 18 }}>
-          {identity}
-        </div>
+        <div style={{ fontSize: 11, color: C.gold, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 12 }}>This week</div>
+        <div style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: 25, lineHeight: 1.25, color: C.cream, marginBottom: 18 }}>{identity}</div>
         <Trend entries={entries} />
       </div>
 
@@ -52,29 +48,19 @@ export default function Home({ entries, onStart }) {
         <div style={S.card}>
           <div style={S.cardEyebrow}>Overall wellness</div>
           <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginTop: 6 }}>
-            <span style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: 34, color: C.gold }}>
-              {wellness ? wellness.toFixed(1) : "—"}
-            </span>
+            <span style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: 34, color: C.gold }}>{wellness ? wellness.toFixed(1) : "—"}</span>
             <span style={{ color: C.lavDim, fontSize: 14 }}>/ 5</span>
           </div>
-          <div style={{ fontSize: 12, color: C.lav, marginTop: 4 }}>
-            {wellness ? bandLabel(wellness) : "Complete a check-in to see this."}
-          </div>
+          <div style={{ fontSize: 12, color: C.lav, marginTop: 4 }}>{wellness ? bandLabel(wellness) : "Complete a check-in to see this."}</div>
         </div>
         <div style={S.card}>
           <div style={S.cardEyebrow}>Asking for care</div>
           {focus ? (
             <>
-              <div style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: 17, color: C.cream, marginTop: 6, lineHeight: 1.2 }}>
-                {focus.m}
-              </div>
-              <div style={{ fontSize: 12, color: C.lav, marginTop: 6 }}>
-                {focus.sec} · {SCALE[focus.v - 1].label}
-              </div>
+              <div style={{ fontFamily: "Fraunces, Georgia, serif", fontSize: 17, color: C.cream, marginTop: 6, lineHeight: 1.2 }}>{focus.m}</div>
+              <div style={{ fontSize: 12, color: C.lav, marginTop: 6 }}>{focus.sec} · {SCALE[focus.v - 1].label}</div>
             </>
-          ) : (
-            <div style={{ fontSize: 13, color: C.lavDim, marginTop: 8 }}>Revealed after your first check-in.</div>
-          )}
+          ) : (<div style={{ fontSize: 13, color: C.lavDim, marginTop: 8 }}>Revealed after your first check-in.</div>)}
         </div>
       </div>
 
@@ -105,6 +91,37 @@ export default function Home({ entries, onStart }) {
           </div>
         </div>
       )}
+
+      {/* Facilitator sharing consent */}
+      <div style={S.card}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+          <div style={{ flex: 1 }}>
+            <div style={S.cardEyebrow}>Sharing with your facilitator</div>
+            <div style={{ fontSize: 13, color: C.lav, marginTop: 6, lineHeight: 1.45 }}>
+              {consent
+                ? "On. Your assigned facilitator can see your ratings and only the reflections you mark to share on each check-in."
+                : "Off. Your check-ins stay completely private. Turn this on to let your assigned facilitator walk with you."}
+            </div>
+          </div>
+          <Toggle on={consent} onChange={onConsent} />
+        </div>
+      </div>
     </div>
+  );
+}
+
+function Toggle({ on, onChange }) {
+  return (
+    <button onClick={() => onChange(!on)} aria-pressed={on} aria-label="Sharing with facilitator"
+      style={{
+        width: 52, height: 30, borderRadius: 16, flexShrink: 0, cursor: "pointer",
+        border: `1px solid ${on ? C.gold : C.line}`, background: on ? C.gold : C.ink,
+        position: "relative", transition: "all .15s ease",
+      }}>
+      <span style={{
+        position: "absolute", top: 3, left: on ? 24 : 3, width: 22, height: 22, borderRadius: "50%",
+        background: on ? C.ink : C.lavDim, transition: "all .15s ease",
+      }} />
+    </button>
   );
 }
